@@ -1,5 +1,7 @@
 const { scripts } = require("../../_shared/_package-scripts");
 
+// babel --copy-files and --ignore options do not work together, so we delete
+// unwanted files manually
 const ignored = ["__tests__", "*.d.js", "msw*", "*.gen.js"]
   .map((p) => `./build/${p}`)
   .join(" ");
@@ -35,7 +37,8 @@ module.exports = {
           --minified \
           --copy-files \
           --extensions '.js,.ts' \
-          --out-dir ./build && rm -rf ${ignored}
+          --out-dir ./build && \
+        rm -rf ${ignored}
       `,
     },
     s: {
