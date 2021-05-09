@@ -1,7 +1,4 @@
-const { resolve: resolvePath } = require("path");
 const { scripts } = require("../../_shared/_package-scripts");
-
-const babelConfig = resolvePath(__dirname, "../../_shared/_babel.config.js");
 
 module.exports = {
   scripts: {
@@ -16,11 +13,28 @@ module.exports = {
         --watch ../shared/src \
         --exec \
         babel-node \
-          --extensions .ts,.js \
+          --root-mode upward \
+          --extensions '.ts,.js' \
           --only ./src/**,../shared/src/** \
-          --config-file ${babelConfig} ./src/app.ts
+          ./src/app.ts
       `,
-      description: `start express server`,
+      description: `start express server in development mode`,
     },
+    b: {
+      script: `rm -rf ./build && \
+        NODE_ENV=production \
+        DEV_ENV=production \
+          babel \
+          src \
+          --root-mode upward \
+          --minified \
+          --extensions '.js,.ts' \
+          --out-dir ./build
+      `,
+    },
+    s: {
+      script: `NODE_ENV=production node ./build/app.js`,
+    },
+    e: "NODE_ENV=production tsc --project .",
   },
 };

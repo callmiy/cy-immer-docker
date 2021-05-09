@@ -1,6 +1,7 @@
 module.exports = (api) => {
-  // if you don't do this, babel will complain about caching
-  api.cache(true);
+  const isTest = process.env.NODE_ENV === "test";
+  // if you don't do this, babel will complain about caching in development
+  api.cache(!isTest);
 
   return {
     presets: [
@@ -8,7 +9,8 @@ module.exports = (api) => {
         "@babel/preset-env",
         {
           targets: {
-            node: "current",
+            // node: "current",
+            node: 4,
           },
         },
       ],
