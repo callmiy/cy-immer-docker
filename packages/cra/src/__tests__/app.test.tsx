@@ -76,7 +76,7 @@ describe("component", () => {
 
     await act(async () => {
       // when app renders
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { debug } = render(<App />);
 
       // loading indicator should be visible
@@ -117,7 +117,7 @@ describe("component", () => {
 
     await act(async () => {
       // when app renders
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { debug } = render(<App />);
       // debug();
 
