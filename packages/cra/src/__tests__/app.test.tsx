@@ -3,7 +3,6 @@ import { CreateParents } from "@im/sh/src/client.qgl-gen";
 import {
   noParentTextId,
   parentErrorTextId,
-  parentSelector,
   parentTextInputId,
   parentTextSubmitId,
   loadingId,
@@ -23,6 +22,12 @@ import { App } from "../app";
 const parent1 = {
   __typename: "Parent" as "Parent",
   id: "11",
+  text: "ab",
+};
+
+const parent2 = {
+  __typename: "Parent" as "Parent",
+  id: "p2",
   text: "ab",
 };
 
@@ -96,7 +101,15 @@ describe("component", () => {
   });
 
   const createParents1Data: CreateParents = {
-    createParents: [{ ...parent1 }],
+    createParents: [{ ...parent2 }],
+  };
+
+  const listParents1Data = {
+    listParents: [
+      {
+        ...parent1,
+      },
+    ],
   };
 
   it("parent form", async () => {
@@ -104,14 +117,7 @@ describe("component", () => {
     // immGlobals.logApolloQueries = true;
 
     mswServer.use(
-      listParentsMswGql({
-        listParents: [
-          {
-            ...parent1,
-          },
-        ],
-      }),
-
+      listParentsMswGql(listParents1Data),
       createParentsMswGql(createParents1Data)
     );
 
@@ -121,26 +127,29 @@ describe("component", () => {
       const { debug } = render(<App />);
       // debug();
 
-      // user should see text input
-      const textEl = await waitFor(() => {
-        const el = getById(parentTextInputId);
+      // user should see fetched data
+      await waitFor(() => {
+        const el = getById(parent1.id);
         expect(el).not.toBeNull();
-        return el;
       });
 
-      // error should not be visible
+      // text showing there empty data returned from fetch should not be visible
+      expect(getById(noParentTextId)).toBeNull();
+
+      // form input error should not be visible
       expect(getById(parentErrorTextId)).toBeNull();
 
       // when user submits empty form
       const submitEl = getById(parentTextSubmitId);
       submitEl.click();
 
-      // error should be visible
+      // form input error should be visible
       await waitFor(() => {
         expect(getById(parentErrorTextId)).not.toBeNull();
       });
 
       // when user fills form correctly
+      const textEl = getById(parentTextInputId) as HTMLInputElement;
       fillField(textEl, "ab");
 
       // when user submits form
@@ -148,14 +157,14 @@ describe("component", () => {
 
       // created parent should be visible
       const parentEl = await waitFor(() => {
-        const el = getByClass(parentSelector, 0) as HTMLElement;
+        const el = getById(parent2.id);
         expect(el).not.toBeNull();
         return el;
       });
 
-      expect(parentEl.id).toEqual("11");
+      expect(parentEl.id).toEqual(parent2.id);
 
-      // error should not be visible
+      // form input error should not be visible
       expect(getById(parentErrorTextId)).toBeNull();
 
       // text showing there is no parent in the system should not be visible
