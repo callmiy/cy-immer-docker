@@ -11,7 +11,7 @@ import {
   GenericEffectDefinition,
 } from "@im/sh/src/effects";
 import { logReducer } from "@im/sh/src/logger";
-import { Parent } from "@im/sh/src/schema.gen";
+import { ParentFragment } from "@im/sh/src/client.qgl-gen";
 import {
   deleteObjectKey,
   StateValue,
@@ -148,7 +148,7 @@ const createParentEffect: DefCreateParentEffect["func"] = async (
 
       dispatch({
         type: ActionType.set_parents,
-        parents: [result1] as Parent[],
+        parents: [result1] as ParentFragment[],
       });
       return;
     }
@@ -182,7 +182,7 @@ const fetchEffect: DefFetchEffect["func"] = async (
     const validResults = result && result.data && result.data.listParents;
 
     if (validResults) {
-      const parents = validResults as Parent[];
+      const parents = validResults as ParentFragment[];
       dispatch({
         type: ActionType.set_parents,
         parents,
@@ -227,7 +227,7 @@ export type Props = {};
 type DataState = {
   value: DataVal;
   parentForm: ParentFormState;
-  parents: Parent[];
+  parents: ParentFragment[];
 };
 
 type ErrorState = {
@@ -275,7 +275,7 @@ export type Action =
     };
 
 export type SetParentPayload = {
-  parents: Parent[];
+  parents: ParentFragment[];
 };
 
 export type InputTextPayload = {

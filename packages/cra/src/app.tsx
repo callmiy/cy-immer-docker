@@ -19,6 +19,7 @@ import {
   ActionType,
 } from "./_app.utils";
 import { StateValue } from "@im/sh/src/utils";
+import { ParentFragment } from "@im/sh/src/client.qgl-gen";
 
 export function App() {
   const [stateMachine, dispatch] = useReducer(reducer, undefined, initState);
