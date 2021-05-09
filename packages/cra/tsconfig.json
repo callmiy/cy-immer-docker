@@ -1,0 +1,10 @@
+{
+  "extends": "../../_shared/_tsconfig.json",
+  "include": [
+    "src/**/*",
+    "../shared/src/**/*"
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}

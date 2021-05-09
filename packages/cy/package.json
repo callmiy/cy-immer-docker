@@ -1,0 +1,14 @@
+{
+  "name": "@im/cy",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nps"
+  },
+  "devDependencies": {
+    "@im/sh": "0.0.0",
+    "cypress": "^7.2.0",
+    "nps": "^5.10.0",
+    "prettier": "^2.2.1"
+  }
+}

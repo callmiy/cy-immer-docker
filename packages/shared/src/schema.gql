@@ -1,0 +1,16 @@
+type Parent {
+  id: ID!
+  text: String!
+}
+
+input ParentInput {
+  text: String!
+}
+
+type Mutation {
+  createParents(input: [ParentInput!]!): [Parent]
+}
+
+type Query {
+  listParents: [Parent]
+}

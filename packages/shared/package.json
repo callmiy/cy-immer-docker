@@ -1,0 +1,25 @@
+{
+  "name": "@im/sh",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "start": "nps"
+  },
+  "dependencies": {
+    "@apollo/client": "3.3.16",
+    "apollo": "2.33.1",
+    "graphql": "15.5.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/typescript": "1.22.0",
+    "@graphql-codegen/typescript-resolvers": "1.19.1",
+    "@types/lodash": "4.14.168",
+    "cypress": "7.2.0",
+    "msw": "0.28.2",
+    "nps": "5.10.0",
+    "prettier": "2.2.1",
+    "typescript": "4.0.3"
+  }
+}

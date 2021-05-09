@@ -1,0 +1,85 @@
+version: "3.4"
+services:
+  base:
+    build:
+      context: "."
+      dockerfile: "Dockerfile.base"
+    image: "immer-cy-base"
+    env_file: "${DOCKER_ENV_FILE}"
+  be:
+    build:
+      context: "."
+      dockerfile: "Dockerfile.be"
+      args:
+        NODE_ENV: "${NODE_ENV}"
+    stdin_open: true
+    image: "immer-cy-be-${NODE_ENV}"
+    entrypoint:
+      - "/usr/local/bin/entrypoint.sh"
+    env_file: "${DOCKER_ENV_FILE}"
+    user: "node"
+    ports:
+      - "${DOCKER_HOST_API_PORT}:${PORT}"
+    volumes:
+      - ".:/home/node/immer-cy"
+      # node_modules
+      - "be_not_used_node_modules:/home/node/immer-cy/node_modules/"
+      - "be_not_used_shared_node_modules:/home/node/immer-cy/packages/shared/node_modules/"
+      - "be_not_used_be_node_modules:/home/node/immer-cy/packages/be/node_modules/"
+      # coverage folder
+      - "be_not_used_shared_coverage:/home/node/immer-cy/packages/shared/coverage/"
+      - "be_not_used_be_coverage:/home/node/immer-cy/packages/be/coverage/"
+      # excluded packages
+      - "be_not_used_cy:/home/node/immer-cy/packages/cy/"
+      - "be_not_used_cra:/home/node/immer-cy/packages/cra/"
+  cra:
+    build:
+      context: "."
+      dockerfile: "Dockerfile.cra"
+      args:
+        NODE_ENV: "${NODE_ENV}"
+    stdin_open: true
+    image: "immer-cy-cra-${NODE_ENV}"
+    entrypoint:
+      - "/usr/local/bin/entrypoint.sh"
+    env_file: "${DOCKER_ENV_FILE}"
+    user: "node"
+    ports:
+      - "${DOCKER_HOST_WEB_PORT}:${PORT}"
+    volumes:
+      - ".:/home/node/immer-cy"
+      # node_modules
+      - "cra_not_used_node_modules:/home/node/immer-cy/node_modules/"
+      - "cra_not_used_shared_node_modules:/home/node/immer-cy/packages/shared/node_modules/"
+      - "cra_not_used_cra_node_modules:/home/node/immer-cy/packages/cra/node_modules/"
+      # coverage folder
+      - "cra_not_used_shared_coverage:/home/node/immer-cy/packages/shared/coverage/"
+      - "cra_not_used_cra_coverage:/home/node/immer-cy/packages/cra/coverage/"
+      - "cra_not_used_cra_build:/home/node/immer-cy/packages/cra/build/"
+      # excluded packages
+      - "cra_not_used_cy:/home/node/immer-cy/packages/cy/"
+      - "cra_not_used_be:/home/node/immer-cy/packages/be/"
+volumes:
+  # cra
+  # node_modules
+  cra_not_used_node_modules:
+  cra_not_used_shared_node_modules:
+  cra_not_used_cra_node_modules:
+  # coverage folder
+  cra_not_used_shared_coverage:
+  cra_not_used_cra_coverage:
+  cra_not_used_cra_build:
+  # excluded packages
+  cra_not_used_cy:
+  cra_not_used_be:
+  # be
+  # node_modules
+  be_not_used_node_modules:
+  be_not_used_shared_node_modules:
+  be_not_used_be_node_modules:
+  # coverage folder
+  be_not_used_shared_coverage:
+  be_not_used_be_coverage:
+  # excluded packages
+  be_not_used_cy:
+  be_not_used_cra:
