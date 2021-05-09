@@ -29,8 +29,7 @@ module.exports = {
     b: {
       script: `rm -rf ./build && \
         NODE_ENV=production \
-        DEV_ENV=production \
-          babel \
+        babel \
           src \
           ../shared/src \
           --root-mode upward \
@@ -40,10 +39,11 @@ module.exports = {
           --out-dir ./build && \
         rm -rf ${ignored}
       `,
+      description: `build app for production with babel`,
     },
     s: {
       script: `NODE_ENV=production node ./build/app.js`,
+      description: `serve app in production`,
     },
-    e: "NODE_ENV=production tsc --project .",
   },
 };
