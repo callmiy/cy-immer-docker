@@ -22,7 +22,7 @@ import { App } from "../app";
 
 const parent1 = {
   __typename: "Parent" as "Parent",
-  id: "1",
+  id: "11",
   text: "ab",
 };
 
@@ -147,9 +147,13 @@ describe("component", () => {
       submitEl.click();
 
       // created parent should be visible
-      await waitFor(() => {
-        expect(getByClass(parentSelector, 0)).not.toBeNull();
+      const parentEl = await waitFor(() => {
+        const el = getByClass(parentSelector, 0) as HTMLElement;
+        expect(el).not.toBeNull();
+        return el;
       });
+
+      expect(parentEl.id).toEqual("11");
 
       // error should not be visible
       expect(getById(parentErrorTextId)).toBeNull();

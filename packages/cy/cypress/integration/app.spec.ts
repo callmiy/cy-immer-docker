@@ -30,7 +30,12 @@ context("App", () => {
     cy.get("#" + parentTextSubmitId).click();
 
     // created parent should be visible
-    cy.get("." + parentSelector).should("exist");
+    cy.get("." + parentSelector)
+      .should("exist")
+      .then((el) => {
+        const id = el.attr("id");
+        expect(typeof id).eq("string");
+      });
     cy.get("#" + noParentTextId).should("not.exist");
   });
 });

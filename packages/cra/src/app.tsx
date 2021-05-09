@@ -69,7 +69,30 @@ export function App() {
 }
 
 function Parents() {
-  return <span className={parentSelector}>1</span>;
+  const {
+    states: { parents },
+  } = useContext(stateContext);
+
+  return (
+    <>
+      {parents.map((parent) => {
+        const { id } = parent;
+
+        return <ParentEl key={id} parent={parent} />;
+      })}
+    </>
+  );
+}
+
+function ParentEl(props: { parent: ParentFragment }) {
+  const {
+    parent: { id, text },
+  } = props;
+  return (
+    <span id={id} className={parentSelector}>
+      {text}
+    </span>
+  );
 }
 
 function ParentForm() {
