@@ -1,7 +1,22 @@
 module.exports = (api) => {
-  const isTest = process.env.NODE_ENV === "test";
+  const envs = process.env;
+  const isTest = envs.NODE_ENV === "test";
+  const isProd = envs.NODE_ENV === "production";
   // if you don't do this, babel will complain about caching in development
   api.cache(!isTest);
+
+  const plugins = [];
+
+  if (isProd) {
+    plugins.push([
+      "module-resolver",
+      {
+        alias: {
+          "@im/sh": ".",
+        },
+      },
+    ]);
+  }
 
   return {
     presets: [
@@ -16,5 +31,6 @@ module.exports = (api) => {
       ],
       "@babel/preset-typescript",
     ],
+    plugins,
   };
 };

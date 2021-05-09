@@ -1,5 +1,9 @@
 const { scripts } = require("../../_shared/_package-scripts");
 
+const ignored = ["__tests__", "*.d.js", "msw*", "*.gen.js"]
+  .map((p) => `./build/${p}`)
+  .join(" ");
+
 module.exports = {
   scripts: {
     ...scripts,
@@ -26,10 +30,12 @@ module.exports = {
         DEV_ENV=production \
           babel \
           src \
+          ../shared/src \
           --root-mode upward \
           --minified \
+          --copy-files \
           --extensions '.js,.ts' \
-          --out-dir ./build
+          --out-dir ./build && rm -rf ${ignored}
       `,
     },
     s: {
