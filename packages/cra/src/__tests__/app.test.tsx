@@ -167,8 +167,8 @@ describe("component", () => {
       // form input error should not be visible
       expect(getById(parentErrorTextId)).toBeNull();
 
-      // text showing there is no parent in the system should not be visible
-      expect(getById(noParentTextId)).toBeNull();
+      // form should be clear
+      expect(textEl.value).toEqual("");
     });
   });
 });

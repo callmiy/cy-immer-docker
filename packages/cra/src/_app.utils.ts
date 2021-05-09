@@ -82,6 +82,7 @@ export const reducer = logReducer(function (
           switch (states.value) {
             case StateValue.data:
               states.parents.unshift(...parents);
+              dataState.parentForm.text = "";
               break;
 
             case StateValue.initial:
