@@ -146,6 +146,7 @@ describe("component", () => {
       // when user submits form
       submitEl.click();
 
+      // created parent should be visible
       await waitFor(() => {
         expect(getByClass(parentSelector, 0)).not.toBeNull();
       });
@@ -155,8 +156,6 @@ describe("component", () => {
 
       // text showing there is no parent in the system should not be visible
       expect(getById(noParentTextId)).toBeNull();
-
-      // created parent should be visible
     });
   });
 });
