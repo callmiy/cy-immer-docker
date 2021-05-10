@@ -6,7 +6,7 @@ import { getDataFile } from "./env";
 const schemaPath = resolvePath(__dirname, "./schema.gql");
 export const schemaString = readFileSync(schemaPath, "utf-8");
 
-const dataFile = resolvePath(__dirname, "..", getDataFile());
+const dataFile = resolvePath(__dirname, getDataFile());
 checkDataFile();
 
 export const resolver: Resolvers = {
