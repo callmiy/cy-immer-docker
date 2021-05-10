@@ -2248,9 +2248,9 @@
     yargs "^15.3.0"
 
 "@netlify/framework-info@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@netlify/framework-info/-/framework-info-4.0.0.tgz#edb2173d60c45be7cf0677e143ef2e6ca5b103c2"
-  integrity sha512-syG09vA2h0u2DR4RZ3uePW1U/9XG3a5akdnLCPSr/fNJmCuPA1PPWK8aTjTgd8JlI318Km40kklfMQpUhfyWlg==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@netlify/framework-info/-/framework-info-4.0.1.tgz#db8334acc162e8cc2847fc43b3f3a3adbde559f3"
+  integrity sha512-yZ2iU6FkhszMESIX0r7hsrStcpGO/mKSR4Mkl/ru1MfAdsW/5XolnmUzw/E8aLeFP4avBDA+0z9+uG19rltMlw==
   dependencies:
     ajv "^8.0.0"
     filter-obj "^2.0.1"
