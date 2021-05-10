@@ -7,7 +7,6 @@ import {
   loadingId,
 } from "@im/sh/src/dom";
 import React, { useContext, useEffect, useReducer } from "react";
-import "./App.css";
 import {
   dispatchContext,
   DispatchProvider,
