@@ -19,4 +19,15 @@
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  const env = process.env;
+  const { BACKEND_SERVER_URL = "", API_URL = "", WEB_URL = "" } = env;
+
+  config.baseUrl = WEB_URL;
+  // let cypress choose its own PORT
+  config.port = null;
+
+  config.env.BACKEND_SERVER_URL = BACKEND_SERVER_URL;
+  config.env.API_URL = API_URL;
+
+  return config;
 };
