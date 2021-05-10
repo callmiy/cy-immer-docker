@@ -1,4 +1,8 @@
-import { GRAPHQL_PATH, NODE_ENV, PORT } from "@im/sh/src/env";
+import {
+  GRAPHQL_PATH,
+  // NODE_ENV,
+  PORT,
+} from "@im/sh/src/env";
 import { resolver, schemaString, checkDataFile } from "@im/sh/src/resolver";
 import cors from "cors";
 import express from "express";
@@ -33,21 +37,19 @@ const webServer = app.listen(PORT, () => {
   `);
 });
 
-if (NODE_ENV !== "production") {
-  const signals: NodeJS.Signals[] = ["SIGTERM", "SIGINT", "SIGHUP", "SIGUSR2"];
+const signals: NodeJS.Signals[] = ["SIGTERM", "SIGINT", "SIGHUP", "SIGUSR2"];
 
-  signals.forEach((signal) => {
-    process.once(signal, () => {
-      console.log("\n\nreceived exit signal:", signal);
-      shutdown();
-    });
-  });
-
-  process.on("uncaughtException", function (err) {
-    console.error(err.stack);
+signals.forEach((signal) => {
+  process.once(signal, () => {
+    console.log("\n\nreceived exit signal:", signal);
     shutdown();
   });
-}
+});
+
+process.on("uncaughtException", function (err) {
+  console.error(err.stack);
+  shutdown();
+});
 
 function shutdown() {
   console.info("Shutting down server\n\n");
