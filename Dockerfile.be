@@ -70,7 +70,7 @@ RUN \
 
 CMD ["/bin/bash"]
 
-############################### build stage ###############################
+############################### building ###############################
 
 FROM dev as build
 
@@ -79,13 +79,26 @@ ENV NODE_ENV="production"
 USER node
 
 WORKDIR /app
-# CMD ["/bin/bash"]
 
 RUN yarn start be.b
 
-############################### run stage ###############################
+############################### running ###############################
 
-FROM node:14.9-buster-slim AS run
+FROM node:14.9-buster-slim AS prod
+
+# docker build \
+  # -t immer-cy-be-prod \
+  # -f Dockerfile.be \
+  # --target prod  \
+  # .
+
+# docker run \
+  # -it \
+  # --rm \
+  # --env-file=.env-prod \
+  # --name immer-cy-be-prod-1 \
+  # -p $DOCKER_HOST_API_PORT:4000 \
+  # immer-cy-be-prod:latest
 
 RUN  \
   # latest npm kept innstalling dev dependencies
