@@ -2,7 +2,7 @@ const path = require("path");
 const { getLoader, loaderByName } = require("@craco/craco");
 
 // monorepo packages that this project depends on
-const absolutePath = path.join(__dirname, "../shared");
+const sharedPackagePath = path.join(__dirname, "../shared");
 
 module.exports = {
   jest: {
@@ -39,7 +39,7 @@ module.exports = {
         const include = Array.isArray(match.loader.include)
           ? match.loader.include
           : [match.loader.include];
-        match.loader.include = include.concat[absolutePath];
+        match.loader.include = include.concat[sharedPackagePath];
       }
       return webpackConfig;
     },
