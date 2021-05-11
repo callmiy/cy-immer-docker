@@ -3,21 +3,21 @@ import {
   CreateParents,
   CreateParentsVariables,
   ListParents,
+  ParentFragment,
 } from "@im/sh/src/client.qgl-gen";
 import {
+  GenericEffectDefinition,
   GenericEffectForState,
   GenericHasEffect,
   getGenericEffects,
-  GenericEffectDefinition,
 } from "@im/sh/src/effects";
 import { logReducer } from "@im/sh/src/logger";
-import { ParentFragment } from "@im/sh/src/client.qgl-gen";
 import {
-  deleteObjectKey,
-  StateValue,
-  ErrorVal,
   DataVal,
+  deleteObjectKey,
+  ErrorVal,
   InitialVal,
+  StateValue,
 } from "@im/sh/src/utils";
 import immer, { Draft } from "immer";
 import { createContext, Dispatch } from "react";
@@ -39,62 +39,17 @@ export const reducer = logReducer(function (
   return immer(prevState, (proxy) => {
     resetStates(proxy);
 
-    const { states } = proxy;
-
     switch (type) {
       case ActionType.set_text:
-        // istanbul ignore else:
-        if (states.value === StateValue.data) {
-          const { text } = payload as InputTextPayload;
-          const { parentForm } = states;
-          parentForm.text = text;
-        }
+        handleSetText(proxy, payload as InputTextPayload);
         break;
 
       case ActionType.submit:
-        // istanbul ignore else:
-        if (states.value === StateValue.data) {
-          const { parentForm } = states;
-          const trimmedText = parentForm.text.trim();
-
-          if (!trimmedText) {
-            parentForm.error = "text: can not be empty";
-            return;
-          }
-
-          parentForm.error = undefined;
-          const effects = getEffects(proxy);
-
-          effects.push({
-            functionName: "createParentEffect",
-            ownArgs: {
-              text: trimmedText,
-            },
-          });
-        }
+        handleSubmit(proxy);
         break;
 
       case ActionType.set_parents:
-        {
-          const dataState = states as DataState;
-          const { parents } = payload as SetParentPayload;
-
-          switch (states.value) {
-            case StateValue.data:
-              states.parents.unshift(...parents);
-              dataState.parentForm.text = "";
-              break;
-
-            case StateValue.initial:
-              dataState.value = StateValue.data;
-              dataState.parents = parents;
-              dataState.parentForm = {
-                text: "",
-              };
-              break;
-          }
-        }
-
+        handleSetParents(proxy, payload as SetParentPayload);
         break;
 
       default:
@@ -121,6 +76,69 @@ export function initState(): StateMachine {
   };
 
   return state;
+}
+
+function handleSetText(
+  proxy: WriteableStateMachine,
+  payload: InputTextPayload
+) {
+  const { states } = proxy;
+
+  // istanbul ignore else:
+  if (states.value === StateValue.data) {
+    const { text } = payload as InputTextPayload;
+    const { parentForm } = states;
+    parentForm.text = text;
+  }
+}
+
+function handleSubmit(proxy: WriteableStateMachine) {
+  const { states } = proxy;
+
+  // istanbul ignore else:
+  if (states.value === StateValue.data) {
+    const { parentForm } = states;
+    const trimmedText = parentForm.text.trim();
+
+    if (!trimmedText) {
+      parentForm.error = "text: can not be empty";
+      return;
+    }
+
+    parentForm.error = undefined;
+    const effects = getEffects(proxy);
+
+    effects.push({
+      functionName: "createParentEffect",
+      ownArgs: {
+        text: trimmedText,
+      },
+    });
+  }
+}
+
+function handleSetParents(
+  proxy: WriteableStateMachine,
+  payload: SetParentPayload
+) {
+  const { states } = proxy;
+  const dataState = states as DataState;
+  const { parents } = payload as SetParentPayload;
+
+  switch (states.value) {
+    case StateValue.data:
+      states.parents.unshift(...parents);
+      dataState.parentForm.text = "";
+      break;
+
+    case StateValue.initial:
+      dataState.value = StateValue.data;
+      dataState.parents = parents;
+      dataState.parentForm = {
+        text: "",
+      };
+      break;
+  }
 }
 
 // ====================================================
