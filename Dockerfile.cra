@@ -88,19 +88,6 @@ RUN yarn start cra.b
 ############################### run stage ###############################
 
 FROM nginx:1.20.0 as prod
-# docker build \
-  # -t immer-cy-cra-prod \
-  # -f Dockerfile.cra \
-  # --target prod  \
-  # --build-arg API_URL=$API_URL \
-  # .
-
-# docker run \
-  # -it \
-  # --rm \
-  # --name immer-cy-cra-prod-1 \
-  # -p $DOCKER_HOST_WEB_PORT:80 \
-  # immer-cy-cra-prod:latest
 
 COPY ./packages/cra/nginx.conf /etc/nginx/conf.d/default.conf
 

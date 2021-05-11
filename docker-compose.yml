@@ -8,7 +8,7 @@ services:
       args:
         NODE_ENV: "${NODE_ENV}"
     stdin_open: true
-    image: "immer-cy-be-${NODE_ENV}"
+    image: "imm-cy-be-dev"
     entrypoint:
       - "/usr/local/bin/entrypoint.sh"
     env_file: "${DOCKER_ENV_FILE}"
@@ -35,7 +35,7 @@ services:
       args:
         NODE_ENV: "${NODE_ENV}"
     stdin_open: true
-    image: "immer-cy-cra-${NODE_ENV}"
+    image: "imm-cy-cra-dev"
     entrypoint:
       - "/usr/local/bin/entrypoint.sh"
     env_file: "${DOCKER_ENV_FILE}"
@@ -62,7 +62,7 @@ services:
       target: "prod"
       args:
         API_URL: "${API_URL}"
-    image: "immer-cy-cra-prod"
+    image: "imm-cy-cra"
     env_file: "${DOCKER_ENV_FILE}"
     ports:
       - "${DOCKER_HOST_WEB_PORT}:80"
@@ -71,7 +71,7 @@ services:
       context: "."
       dockerfile: "Dockerfile.be"
       target: "prod"
-    image: "immer-cy-be-prod"
+    image: "imm-cy-be"
     env_file: "${DOCKER_ENV_FILE}"
     ports:
       - "${DOCKER_HOST_API_PORT}:4000"

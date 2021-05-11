@@ -86,20 +86,6 @@ RUN yarn start be.b
 
 FROM node:14.9-buster-slim AS prod
 
-# docker build \
-  # -t immer-cy-be-prod \
-  # -f Dockerfile.be \
-  # --target prod  \
-  # .
-
-# docker run \
-  # -it \
-  # --rm \
-  # --env-file=.env-prod \
-  # --name immer-cy-be-prod-1 \
-  # -p $DOCKER_HOST_API_PORT:4000 \
-  # immer-cy-be-prod:latest
-
 RUN  \
   # latest npm kept innstalling dev dependencies
   # npm install npm@latest -g && \
