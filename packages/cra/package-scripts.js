@@ -40,7 +40,7 @@ module.exports = {
         description: `serve built artefact`,
       },
     },
-    eject: `${reactScript} eject`,
+    e: `react-scripts eject`,
     // netlify
     n: {
       s: {
