@@ -28,19 +28,14 @@ module.exports = {
     },
   },
   webpack: {
-    alias: {},
-    plugins: [],
     configure: (webpackConfig) => {
-      const { isFound, match } = getLoader(
-        webpackConfig,
-        loaderByName("babel-loader")
-      );
-      if (isFound) {
-        const include = Array.isArray(match.loader.include)
-          ? match.loader.include
-          : [match.loader.include];
-        match.loader.include = include.concat[sharedPackagePath];
-      }
+      const { match } = getLoader(webpackConfig, loaderByName("babel-loader"));
+      const include = Array.isArray(match.loader.include)
+        ? match.loader.include
+        : [match.loader.include];
+
+      match.loader.include = include.concat[sharedPackagePath];
+
       return webpackConfig;
     },
   },
