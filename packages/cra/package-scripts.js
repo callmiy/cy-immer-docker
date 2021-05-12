@@ -4,7 +4,6 @@ const envs = process.env;
 const { API_URL = "" } = envs;
 
 const devEnvs = `
-  DISABLE_ESLINT_PLUGIN=true \
   SKIP_PREFLIGHT_CHECK=true \
   BROWSER=none \
   REACT_APP_API_URL=${API_URL} \
