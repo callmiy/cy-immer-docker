@@ -15,6 +15,7 @@ const productionEnvs = `
 
 const reactScript = "craco";
 // const reactScript = 'react-scripts'
+const testScript = "NODE_ENV=test jest --runInBand ";
 
 module.exports = {
   scripts: {
@@ -29,8 +30,12 @@ module.exports = {
     },
     t: {
       default: {
-        script: `${reactScript} test`,
+        script: `${testScript} --watch`,
         description: `run test in watch mode`,
+      },
+      t: {
+        script: `${testScript}`,
+        description: `run test in none watch mode`,
       },
     },
     s: {
