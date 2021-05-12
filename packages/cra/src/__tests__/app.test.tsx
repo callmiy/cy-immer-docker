@@ -16,6 +16,7 @@ import { mswServer, mswServerListen } from "@im/sh/src/msw-server";
 import { deleteObjectKey } from "@im/sh/src/utils";
 import "@testing-library/jest-dom";
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
+import React from "react";
 import { act } from "react-dom/test-utils";
 import { App } from "../app";
 
