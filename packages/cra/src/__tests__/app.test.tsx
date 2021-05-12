@@ -180,6 +180,7 @@ function getById(id: string) {
   return document.getElementById(id) as HTMLElement;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getByClass(className: string, index?: number) {
   const els = document.getElementsByClassName(className);
 
