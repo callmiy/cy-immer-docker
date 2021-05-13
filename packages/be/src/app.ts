@@ -1,8 +1,4 @@
-import {
-  GRAPHQL_PATH,
-  // NODE_ENV,
-  PORT,
-} from "@im/sh/src/env";
+import { PORT } from "@im/sh/src/env";
 import { resolver, schemaString, checkDataFile } from "@im/sh/src/resolver";
 import cors from "cors";
 import express from "express";
@@ -15,10 +11,9 @@ const schema = buildSchema(schemaString);
 const app = express();
 app.use(cors());
 app.use(logger("dev"));
-// app.use(express.json());
 
 app.use(
-  `/${GRAPHQL_PATH}`,
+  "/gql",
   graphqlHTTP({
     schema,
     rootValue: resolver,
@@ -33,7 +28,7 @@ app.use("/reset", (_req, res) => {
 
 const webServer = app.listen(PORT, () => {
   console.log(`
-    Running GraphQL server at http://localhost:${PORT}/${GRAPHQL_PATH}
+    Running GraphQL server at http://localhost:${PORT}/gql
   `);
 });
 

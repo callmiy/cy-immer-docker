@@ -17,4 +17,4 @@ function hasCypress() {
   return "undefined" !== typeof window && !!window.Cypress;
 }
 
-export const { PORT, GRAPHQL_PATH, NODE_ENV } = env;
+export const { PORT, NODE_ENV } = env;

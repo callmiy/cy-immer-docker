@@ -1,0 +1,94 @@
+name: continuous-integration
+
+on:
+  push:
+    branches:
+      - master
+      - deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Restore node_modules from cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: node_modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install node dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Quality control - type check/lint/unit test
+        run: |
+          yarn start tc
+          yarn start lint
+          # yarn start cra.t.t
+
+      - name: Build apps
+        run: |
+          # yarn start cra.b
+          # build backend
+          yarn start be.b
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: Docker build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: samba6/kanmii:imm-cy-be
+          target: prod
+          file: Dockerfile.be
+
+      - name: Set up ssh config for linode-at server
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.LINODE_SSH_PRIVATE_KEY }}
+          name: linode-at
+          known_hosts: 'we_will_set_this_up_our_selves_see_next_action'
+          config: |
+            Host linode-at
+              HostName ${{ secrets.LINODE_AT_SSH_HOST }}
+              Port ${{ secrets.LINODE_AT_SSH_PORT }}
+              User ${{ secrets.LINODE_AT_USER }}
+              IdentityFile ~/.ssh/linode-at
+
+      - name: Add linode-at server host to runner server known_hosts
+        run: |
+          ssh-keyscan \
+            -H \
+            -p ${{ secrets.LINODE_AT_SSH_PORT }} \
+            ${{ secrets.LINODE_AT_SSH_HOST }} \
+          >> ~/.ssh/known_hosts
+
+      - name: "Deployment server: set up project folder"
+        run: |
+          ssh linode-at \
+            'rm -rf ${{ secrets.PROJECT_PATH }} && mkdir -p ${{ secrets.PROJECT_PATH }}'
+
+      - name: "Deployment server: start docker"
+        run: |
+          echo ${{ secrets.LINODE_AT_PWD }} | \
+            ssh -tt linode-at \
+              "sudo chmod 666 /var/run/docker.sock"
+
+      - name: "Deployment server: start backend docker"
+        run: |
+          ssh linode-at \
+            'cd ${{ secrets.PROJECT_PATH }} && docker pull samba6/kanmii:imm-cy-be && docker rm -f imm-cy-be 2>/dev/null && docker run -d --name imm-cy-be --env PORT=${{ secrets.PORT }} --env DATA_FILE=${{ secrets.DATA_FILE }} -p 80:${{ secrets.PORT }} samba6/kanmii:imm-cy-be'
