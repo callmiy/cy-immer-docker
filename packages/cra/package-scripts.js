@@ -38,41 +38,10 @@ module.exports = {
         description: `run test in none watch mode`,
       },
     },
-    s: {
-      default: {
-        script: `serve -s build -l 4000`,
-        description: `serve built artefact`,
-      },
-    },
     e: `react-scripts eject`,
-    // netlify
     n: {
-      s: {
-        script: `${productionEnvs} ${reactScript} start`,
-        description: `serve netlify on local machine`,
-      },
-      d: {
-        default: {
-          script: `netlify dev`,
-          description: `run netlify development server`,
-        },
-        l: {
-          script: `netlify dev --live`,
-          description: `run netlify development server over the internet`,
-        },
-      },
-      b: {
-        default: {
-          script: `netlify build`,
-          description: `build netlify locally`,
-        },
-        d: {
-          script: `netlify build --dry`,
-          description: `build netlify locally dry run`,
-        },
-      },
       p: {
-        script: `netlify deploy --dry=./build --prod`,
+        script: `DEBUG=* netlify deploy --dir=./build --prod`,
         description: `netlify deploy to production`,
       },
     },

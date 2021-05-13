@@ -13,17 +13,6 @@ const packages = [
   ["shared", "sh"],
 ];
 
-function runPerPackage(commandFn, condFn = () => true) {
-  return packages.reduce((acc, [pkg, alias]) => {
-    const path = resolvePath(packagesPath, pkg);
-    if (condFn(path)) {
-      const command = commandFn(path, pkg, alias);
-      acc.push(command);
-    }
-    return acc;
-  }, []);
-}
-
 const packagesScripts = packages.reduce((acc, [packagePath, alias]) => {
   const script = resolvePath(packagesPath, packagePath, "package-scripts");
 
@@ -49,35 +38,11 @@ module.exports = {
       description: `Sort package json`,
     },
     tc: {
-      script: runPerPackage(
-        (path, pkg) => {
-          return ` echo "type-checking package: ${pkg}" && \
-            cd ${path} && \
-            yarn start tc && \
-            cd ../..`;
-        },
-        (path) => {
-          const tsConfigPath = resolvePath(path, "tsconfig.json");
-          return existsSync(tsConfigPath);
-        }
-      ).join(" && "),
-
+      script: `yarn start cra.tc sh.tc be.tc`,
       description: "type check project packages in turn",
     },
     lint: {
-      script: runPerPackage(
-        (path, pkg) => {
-          return ` echo "lint package: ${pkg}" && \
-            cd ${path} && \
-            yarn start lint && \
-            cd ../..`;
-        },
-        (path) => {
-          const tsConfigPath = resolvePath(path, "tsconfig.json");
-          return existsSync(tsConfigPath);
-        }
-      ).join(" && "),
-
+      script: `yarn start cra.lint sh.lin be.lint`,
       description: "type check project packages in turn",
     },
   },

@@ -25,15 +25,12 @@ export function getClient(
     uri = "http://localhost:4000";
     link = createHttpLink({
       uri,
-      useGETForQueries: true,
-      fetchOptions: {
-        mode: "no-cors",
-      },
-      credentials: "omit",
     });
   } else {
     uri = getApiUrl();
-    link = createHttpLink({ uri });
+    link = createHttpLink({
+      uri,
+    });
   }
 
   link = middlewareErrorLink(link);

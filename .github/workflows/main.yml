@@ -34,7 +34,7 @@ jobs:
 
       - name: Build apps
         run: |
-          # yarn start cra.b
+          yarn start cra.b
           # build backend
           yarn start be.b
 
@@ -56,39 +56,34 @@ jobs:
           target: prod
           file: Dockerfile.be
 
-      - name: Set up ssh config for linode-at server
-        uses: shimataro/ssh-key-action@v2
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to backend server
+        uses: appleboy/ssh-action@master
         with:
+          host: ${{ secrets.LINODE_AT_SSH_HOST }}
+          username: ${{ secrets.LINODE_AT_USER }}
           key: ${{ secrets.LINODE_SSH_PRIVATE_KEY }}
-          name: linode-at
-          known_hosts: 'we_will_set_this_up_our_selves_see_next_action'
-          config: |
-            Host linode-at
-              HostName ${{ secrets.LINODE_AT_SSH_HOST }}
-              Port ${{ secrets.LINODE_AT_SSH_PORT }}
-              User ${{ secrets.LINODE_AT_USER }}
-              IdentityFile ~/.ssh/linode-at
+          port: ${{ secrets.LINODE_AT_SSH_PORT }}
+          script_stop: true
+          script: |
+            rm -rf ${{ secrets.PROJECT_PATH }} && \
+              mkdir -p ${{ secrets.PROJECT_PATH }} && \
+              echo ${{ secrets.LINODE_AT_PASS }} | \
+                sudo -S chmod 666 /var/run/docker.sock && \
+              cd ${{ secrets.PROJECT_PATH }} && \
+              docker pull samba6/kanmii:imm-cy-be && \
+              docker rm -f imm-cy-be 2>/dev/null && \
+              docker run \
+                -d \
+                --name imm-cy-be \
+                --env PORT=${{ secrets.PORT }} \
+                --env DATA_FILE=${{ secrets.DATA_FILE }} \
+                -p 80:${{ secrets.PORT }} \
+                -p 443:${{ secrets.PORT }} \
+                samba6/kanmii:imm-cy-be
 
-      - name: Add linode-at server host to runner server known_hosts
-        run: |
-          ssh-keyscan \
-            -H \
-            -p ${{ secrets.LINODE_AT_SSH_PORT }} \
-            ${{ secrets.LINODE_AT_SSH_HOST }} \
-          >> ~/.ssh/known_hosts
-
-      - name: "Deployment server: set up project folder"
-        run: |
-          ssh linode-at \
-            'rm -rf ${{ secrets.PROJECT_PATH }} && mkdir -p ${{ secrets.PROJECT_PATH }}'
-
-      - name: "Deployment server: start docker"
-        run: |
-          echo ${{ secrets.LINODE_AT_PWD }} | \
-            ssh -tt linode-at \
-              "sudo chmod 666 /var/run/docker.sock"
-
-      - name: "Deployment server: start backend docker"
-        run: |
-          ssh linode-at \
-            'cd ${{ secrets.PROJECT_PATH }} && docker pull samba6/kanmii:imm-cy-be && docker rm -f imm-cy-be 2>/dev/null && docker run -d --name imm-cy-be --env PORT=${{ secrets.PORT }} --env DATA_FILE=${{ secrets.DATA_FILE }} -p 80:${{ secrets.PORT }} samba6/kanmii:imm-cy-be'
+      - name: Deploy to netlify
+        run: yarn start cra.n.p
